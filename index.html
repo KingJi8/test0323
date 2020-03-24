@@ -151,169 +151,175 @@
 </head>
 <body>
     <script type="text/javascript" src="https://ssl.pstatic.net/adimg3.search/adpost/js/adpost_show_ads_v2.min.js"></script>
-<div id="powerLink" class="powerlink"></div>
-<script type="text/javascript">
+    <div id="powerLink" class="powerlink"></div>
+    <script type="text/javascript">
 
-function addComma(num) {
-		var regexp = /\B(?=(\d{3})+(?!\d))/g;
-		return num.toString().replace(regexp, ',');
-  }
-function stringreplaceAll(str,org, dest) {
-	    return str.split(org).join(dest);
-  }
-function checkEmpty(str) {
-  return (!str)?'':str;
-}
+    function addComma(num) {
+            var regexp = /\B(?=(\d{3})+(?!\d))/g;
+            return num.toString().replace(regexp, ',');
+    }
+    function stringreplaceAll(str,org, dest) {
+            return str.split(org).join(dest);
+    }
+    function checkEmpty(str) {
+    return (!str)?'':str;
+    }
 
-function handle_naver_ads_response(response) {
+    function handle_naver_ads_response(response) {
 
-	var contData = response.ads;
-	
-	if (contData && contData.length > 0) {
-		var dataSize = contData.length;
-		var html = '<div class="toplink">파워링크';
-html += '<span class="tag_comps">광고</span><span class="reg_link"><a href="https://m.searchad.naver.com/" target="_blank">등록하기</a></span></div>';
-		html += '<ul id="contentsList" class="powerlink_list">';
-	
-		for(var i=0; i<dataSize; i++) {
-			var dataItem = contData[i];
-			var headline = dataItem.headline;
-			var description = dataItem.description;
-			var clickUrl = dataItem.clickUrl;
-			var displayUrl = dataItem.displayUrl;
-			
-			// imageExtension 확인
-			var imageExt = false;
-			if (dataItem.imageExtension) imageExt = true;
-			
-			// GroupB 확장소재 결정 - 우선 순위는 사이트 맞게 조정
-			var bGroupExt = "";
-			var bExtType = "";
-			
+        var contData = response.ads;
+        
+        if (contData && contData.length > 0) {
+            var dataSize = contData.length;
+            var html = '<div class="toplink">파워링크';
+            html += '<span class="tag_comps">광고</span><span class="reg_link"><a href="https://m.searchad.naver.com/" target="_blank">등록하기</a></span></div>';
+            html += '<ul id="contentsList" class="powerlink_list">';
+        
+            for(var i=0; i<dataSize; i++) {
+                var dataItem = contData[i];
+                var headline = dataItem.headline;
+                var description = dataItem.description;
+                var clickUrl = dataItem.clickUrl;
+                var displayUrl = dataItem.displayUrl;
+                
+                // imageExtension 확인
+                var imageExt = false;
+                if (dataItem.imageExtension) imageExt = true;
+                
+                // GroupB 확장소재 결정 - 우선 순위는 사이트 맞게 조정
+                var bGroupExt = "";
+                var bExtType = "";
+                
 
-	if (dataItem.headlineExtension) {	
- bExtType = "type_subtitle";	
- bGroupExt = "headlineExt";
-}else if (dataItem.subLinkExtension) {	
- bExtType = "ext_link";	
- bGroupExt = "subLinkExt";
-}else if (dataItem.descriptionExtension) {	
- bExtType = "ext_desc";	
- bGroupExt = "descExt";
-}else if (dataItem.priceLinkExtension) {	
- bExtType = "ext_price";	
- bGroupExt = "priceLinkExt";
-}else if (dataItem.placeExtension) {	
- bExtType = "ext_place";	
- bGroupExt = "placeExt";
-} 
-			html += '<li class="list_item' + ((imageExt)?' img_type':'') + ((bExtType)?(' '+bExtType):'') + '">';
-			
-			html += '<div class="lst_cont">';
-			if (imageExt) {
-				html += '<div class="img_area">';
-				html += '<a class="img_link"  target="_blank" href="' + dataItem.imageExtension.clickUrl + '"><img height="87" width="87" src="' + dataItem.imageExtension.imageUrl + '"></a></div>';
-			}
-			html += '<div class="tit_wrap"><div class="txt_area"><span class="tit_area"><a class="tit"  target="_blank" href="' + clickUrl + '">' + headline + '</a></span>';
-			html += '</div></div>';
-			// headlineExtension
-			if(bGroupExt == "headlineExt") {
-				html += '<div class="tit_area_sub"><a class="tit_sub" target="_blank" href="' + dataItem.headlineExtension.clickUrl + '">' + dataItem.headlineExtension.headline + '</a></div>';
-			}
-			html += '<div class="url_area"><cite class="url"><a  target="_blank" href="' + clickUrl + '">' + displayUrl +'</a></cite></div>';
-			if (typeof serval === "undefined") {
-			  html += '<div class="desc up">' + description + '</div>';  
-			}else{
-			  html += '<div class="desc up">' + stringreplaceAll(description,serval,'<mark>'+serval+'</mark>') + '</div>';
-			}
-			//subLinkExtension
-			if(bGroupExt == "subLinkExt") {
-				html += '<ul class="menu_list">';
-				var sublinkSize = dataItem.subLinkExtension.length;
-				for(var j=0; j<sublinkSize; j++) {
-					html += '<li class="menu_item"><a class="menu_item_link" target="_blank" href="' + dataItem.subLinkExtension[j].clickUrl +'">' + dataItem.subLinkExtension[j].name + '</a></li>';
-				}
-				html += '</ul>';
-			}
-			
-			// descriptionExtension
-			if(bGroupExt == "descExt") {
-				html += '<div class="pr"><mark class="pr_tit">' + checkEmpty(dataItem.descriptionExtension.heading) + '</mark>';
-				html += dataItem.descriptionExtension.description + '</div>';
-			}
-			
-			if (typeof serval === "undefined") {
-			  	html += '<div class="desc down">' + description + '</div>';  
-			}else{
-				html += '<div class="desc down">' + stringreplaceAll(description,serval,'<mark>'+serval+'</mark>') + '</div>';
-			}
-			
-			// priceLinkExtension
-			if(bGroupExt == "priceLinkExt") {
-				html += '<ul class="price_list">';
-				var pricelinkSize = dataItem.priceLinkExtension.length;
-				for(var j=0; j<pricelinkSize; j++) {
-					html += '<li class="price_item"><a class="price_item_link" target="_blank" href="'+ dataItem.priceLinkExtension[j].clickUrl + '">';
-					html += '<em class="price">' + addComma(dataItem.priceLinkExtension[j].price) + ' ' + checkEmpty(dataItem.priceLinkExtension[j].modifier) + '</em>';
-					html += '<div class="txt"><div class="txt_inner">' + checkEmpty(dataItem.priceLinkExtension[j].name) + '</div></div></a></li>';
-				}
-				html += '</ul>';
-			}
-			// placeExtension
-			if(bGroupExt == "placeExt") {
-				var placeType = "";
-				if(dataItem.placeExtension.openingHours) {
-					placeType = "time_type";
-				}
-				html += '<div class="ext_place_info ' + placeType + '"><a class="place_link" target="_blank" href="' + dataItem.placeExtension.clickUrl + '">';
-			
-				if(dataItem.placeExtension.openingHours) {
-					html += '<div class="time_area">';
-					for(var j=0; j < dataItem.placeExtension.openingHours.length; j++) {
-						html += '<span class="etc_item">' + dataItem.placeExtension.openingHours[j] + '</span>';
-					}
-					html += '</div>';
-				}
-				html += '<div class="etc_area">';
-				if(dataItem.placeExtension.reviewCount) {
-					html += '<span class="etc_item">리뷰 ' + dataItem.placeExtension.reviewCount + '</span>';
-				}
-				if(dataItem.placeExtension.recentBookingCount) {
-					html += '<span class="etc_item">최근 예약 ' + dataItem.placeExtension.recentBookingCount + '</span>';
-				}
-				if(dataItem.placeExtension.menuPrice) {
-					html += '<span class="etc_item">' + dataItem.placeExtension.menuPrice + '</span>';
-				}
-				if(dataItem.placeExtension.averagePrice) {
-					html += '<span class="etc_item">' + dataItem.placeExtension.averagePrice + '</span>';
-				}
-				if(dataItem.placeExtension.minimumPrice) {
-					html += '<span class="etc_item">' + dataItem.placeExtension.minimumPrice + '</span>';
-				}
-				if(dataItem.placeExtension.promotionTitle) {
-					html += '<span class="etc_item">' + dataItem.placeExtension.promotionTitle + '</span>';
-				}
-			
-				html += '</div></a></div>';
-			}
-		}
-	
-		html += '</div></li>';
-	
-	
-		jQuery("#powerLink").html(html);
-		jQuery("#powerLink").show();
-	} else {
-		jQuery("#powerLink").hide();
-	}
-}
-	
-    var serval = "";
+                if (dataItem.headlineExtension) {	
+                    bExtType = "type_subtitle";	
+                    bGroupExt = "headlineExt";
+                }else if (dataItem.subLinkExtension) {	
+                    bExtType = "ext_link";	
+                    bGroupExt = "subLinkExt";
+                }else if (dataItem.descriptionExtension) {	
+                    bExtType = "ext_desc";	
+                    bGroupExt = "descExt";
+                }else if (dataItem.priceLinkExtension) {	
+                    bExtType = "ext_price";	
+                    bGroupExt = "priceLinkExt";
+                }else if (dataItem.placeExtension) {	
+                    bExtType = "ext_place";	
+                    bGroupExt = "placeExt";
+                } 
+
+                html += '<li class="list_item' + ((imageExt)?' img_type':'') + ((bExtType)?(' '+bExtType):'') + '">';
+                
+                html += '<div class="lst_cont">';
+                if (imageExt) {
+                    html += '<div class="img_area">';
+                    html += '<a class="img_link"  target="_blank" href="' + dataItem.imageExtension.clickUrl + '"><img height="87" width="87" src="' + dataItem.imageExtension.imageUrl + '"></a></div>';
+                }
+                html += '<div class="tit_wrap"><div class="txt_area"><span class="tit_area"><a class="tit"  target="_blank" href="' + clickUrl + '">' + headline + '</a></span>';
+                html += '</div></div>';
+
+                // headlineExtension
+                if(bGroupExt == "headlineExt") {
+                    html += '<div class="tit_area_sub"><a class="tit_sub" target="_blank" href="' + dataItem.headlineExtension.clickUrl + '">' + dataItem.headlineExtension.headline + '</a></div>';
+                }
+
+
+                html += '<div class="url_area"><cite class="url"><a  target="_blank" href="' + clickUrl + '">' + displayUrl +'</a></cite></div>';
+                if (typeof serval === "undefined") {
+                    html += '<div class="desc up">' + description + '</div>';  
+                }else{
+                    html += '<div class="desc up">' + stringreplaceAll(description,serval,'<mark>'+serval+'</mark>') + '</div>';
+                }
+
+                
+                //subLinkExtension
+                if(bGroupExt == "subLinkExt") {
+                    html += '<ul class="menu_list">';
+                    var sublinkSize = dataItem.subLinkExtension.length;
+                    for(var j=0; j<sublinkSize; j++) {
+                        html += '<li class="menu_item"><a class="menu_item_link" target="_blank" href="' + dataItem.subLinkExtension[j].clickUrl +'">' + dataItem.subLinkExtension[j].name + '</a></li>';
+                    }
+                    html += '</ul>';
+                }
+                
+                // descriptionExtension
+                if(bGroupExt == "descExt") {
+                    html += '<div class="pr"><mark class="pr_tit">' + checkEmpty(dataItem.descriptionExtension.heading) + '</mark>';
+                    html += dataItem.descriptionExtension.description + '</div>';
+                }
+                
+                if (typeof serval === "undefined") {
+                    html += '<div class="desc down">' + description + '</div>';  
+                }else{
+                    html += '<div class="desc down">' + stringreplaceAll(description,serval,'<mark>'+serval+'</mark>') + '</div>';
+                }
+                
+                // priceLinkExtension
+                if(bGroupExt == "priceLinkExt") {
+                    html += '<ul class="price_list">';
+                    var pricelinkSize = dataItem.priceLinkExtension.length;
+                    for(var j=0; j<pricelinkSize; j++) {
+                        html += '<li class="price_item"><a class="price_item_link" target="_blank" href="'+ dataItem.priceLinkExtension[j].clickUrl + '">';
+                        html += '<em class="price">' + addComma(dataItem.priceLinkExtension[j].price) + ' ' + checkEmpty(dataItem.priceLinkExtension[j].modifier) + '</em>';
+                        html += '<div class="txt"><div class="txt_inner">' + checkEmpty(dataItem.priceLinkExtension[j].name) + '</div></div></a></li>';
+                    }
+                    html += '</ul>';
+                }
+                // placeExtension
+                if(bGroupExt == "placeExt") {
+                    var placeType = "";
+                    if(dataItem.placeExtension.openingHours) {
+                        placeType = "time_type";
+                    }
+                    html += '<div class="ext_place_info ' + placeType + '"><a class="place_link" target="_blank" href="' + dataItem.placeExtension.clickUrl + '">';
+                
+                    if(dataItem.placeExtension.openingHours) {
+                        html += '<div class="time_area">';
+                        for(var j=0; j < dataItem.placeExtension.openingHours.length; j++) {
+                            html += '<span class="etc_item">' + dataItem.placeExtension.openingHours[j] + '</span>';
+                        }
+                        html += '</div>';
+                    }
+                    html += '<div class="etc_area">';
+                    if(dataItem.placeExtension.reviewCount) {
+                        html += '<span class="etc_item">리뷰 ' + dataItem.placeExtension.reviewCount + '</span>';
+                    }
+                    if(dataItem.placeExtension.recentBookingCount) {
+                        html += '<span class="etc_item">최근 예약 ' + dataItem.placeExtension.recentBookingCount + '</span>';
+                    }
+                    if(dataItem.placeExtension.menuPrice) {
+                        html += '<span class="etc_item">' + dataItem.placeExtension.menuPrice + '</span>';
+                    }
+                    if(dataItem.placeExtension.averagePrice) {
+                        html += '<span class="etc_item">' + dataItem.placeExtension.averagePrice + '</span>';
+                    }
+                    if(dataItem.placeExtension.minimumPrice) {
+                        html += '<span class="etc_item">' + dataItem.placeExtension.minimumPrice + '</span>';
+                    }
+                    if(dataItem.placeExtension.promotionTitle) {
+                        html += '<span class="etc_item">' + dataItem.placeExtension.promotionTitle + '</span>';
+                    }
+                
+                    html += '</div></a></div>';
+                }
+            }
+            
+            html += '</div></li>';
+        
+        
+            jQuery("#powerLink").html(html);
+            jQuery("#powerLink").show();
+        } else {
+            jQuery("#powerLink").hide();
+        }
+    }
+            
+    var serval = "바지";
     NAVER_ADPOST_V2({
-        channel: "diorcafe.ch2",
-        pageSize: 2,
+        channel: "m_ppomppu.ch1",
+        pageSize: 10,
         url: window.location.href,
-        keywordGroup:"디올카페_공통",
+        query: serval,
         test: true,
         mock: false,
     });
